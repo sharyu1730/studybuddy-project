@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PolyAssist AI</title>
+    <style>
+        body {
+            background-color: #cde8e5; /* Tea Green */
+            font-family: Segoe UI, sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background-color: #d6e6f2; /* Light Blue Box */
+            padding: 40px;
+            border-radius: 20px;
+            width: 60%;
+            margin: auto;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 8px;
+            border: 1px solid #008080;
+        }
+
+        button {
+            background-color: #008080;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #006666;
+        }
+
+        ul {
+            text-align: left;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>PolyAssist AI 🎓</h1>
+    <p>Hello 👋 I am your Study Buddy.
+       I will help you learn step-by-step!</p>
+
+    <form method="POST">
+
+        <!-- CO Selection -->
+        <select name="co" onchange="this.form.submit()" required>
+            <option value="">Select CO</option>
+            {% for co in data %}
+                <option value="{{ co }}"
+                    {% if selected_co == co %}selected{% endif %}>
+                    {{ co }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Subject Selection -->
+        {% if selected_co %}
+        <select name="subject" onchange="this.form.submit()" required>
+            <option value="">Select Subject</option>
+            {% for subject in data[selected_co] %}
+                <option value="{{ subject }}"
+                    {% if selected_subject == subject %}selected{% endif %}>
+                    {{ subject }}
+                </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+
+        <!-- Unit Selection -->
+        {% if selected_co and selected_subject %}
+        <select name="unit" required>
+            <option value="">Select Unit</option>
+            {% for unit in data[selected_co][selected_subject] %}
+                <option value="{{ unit }}"
+                    {% if selected_unit == unit %}selected{% endif %}>
+                    {{ unit }}
+                </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+
+        <br>
+        <button type="submit">Start Learning</button>
+
+    </form>
+
+    <!-- Show Unit Content -->
+    {% if unit_data %}
+    <div class="result-box">
+        <h3>📘 Unit Information</h3>
+
+        {% for topic_name, details in unit_data.items() %}
+            <h4>{{ topic_name }}</h4>
+            <p><b>Definition:</b> {{ details.definition }}</p>
+
+            <p><b>Topics:</b></p>
+            <ul>
+                {% for t in details.topics %}
+                    <li>{{ t }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
